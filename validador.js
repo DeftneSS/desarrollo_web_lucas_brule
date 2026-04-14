@@ -1,8 +1,14 @@
+const data = {
+    TipoUsuario: ["Pregrado", "Postgrado", "Funcionario", "Academico"],
+    
+}
+
+
 const dominiosPermitidos = [
     'uchile.cl',
     'ing.uchile.cl',
     'dcc.uchile.cl',
-    'ug.uchile,cl',
+    'ug.uchile.cl',
     'gmail.com',
     'outlook.com',
     'hotmail.com',
@@ -37,7 +43,7 @@ const validarMail = (email) => {
 const validarNombre = (name) => {
     // El nombre no debe estar vacío, no debe contener solo espacios 
     // y no debe tener más de un espacio consecutivo
-    if (!name || name.trim() .length > 4 || /\s{2,}/.test(name)) {
+    if (!name || name.trim().length < 2 || /\s{2,}/.test(name)) {
         return false
     }
     return true
@@ -86,8 +92,11 @@ const validarSelect = (select) => {
 
 const validarArchivo = (file) => {
     // El archivo no debe estar vacío y debe ser un PDF o una imagen
-    if (!file || (file.type !== "application/pdf" && file.type.split('/')[0] !== "image")
-    || file.length < 1) {
+    if (!file || file.length < 1) {
+        return false
+    }
+    const fileObj = file[0]
+    if (fileObj.type !== "application/pdf" && fileObj.type.split('/')[0] !== "image") {
         return false
     }
     return true
@@ -119,7 +128,6 @@ const validarFormRegistro = () => {
     let passwordInput = myForm["password"].value;
     let phoneInput = myForm["phone"].value;
     let typeInput = myForm["type"].value;
-    let roleInput = myForm["role"].value;
 
     
     let invalidInputs = []
@@ -155,10 +163,6 @@ const validarFormRegistro = () => {
         setInvalidInput("Tipo de Usuario")
     }
 
-    if (!validarSelect(roleInput)) {
-        setInvalidInput("Rol de Usuario")
-    }
-
 
     let validationBox = document.getElementById("val-box-registro");
     let validationMessageElem = document.getElementById("val-msg-registro");
@@ -192,7 +196,7 @@ const validarFormRegistro = () => {
         continueButton.innerText = "Continuar";
         continueButton.style.marginRight = "10px";
         continueButton.onclick = () => {
-            window.location.href = "activ-historial.html";
+            window.location.href = "listado.html";
         }
 
         validationListElem.appendChild(continueButton);
@@ -211,6 +215,7 @@ const validarFormActividades = () => {
     let ActividadesForm = document.forms["ActividadesForm"];
     let fileInput = ActividadesForm["file"].files;
     let linkInput = ActividadesForm["link"].value;
+    let actividadesInput = ActividadesForm["tipo"].value;
 
     let invalidInputs = []
     let isValid = true
@@ -226,6 +231,10 @@ const validarFormActividades = () => {
 
     if (!validarLink(linkInput)) {
         setInvalidInput("Link")
+    }
+
+    if (!validarSelect(actividadesInput)) {
+        setInvalidInput("Actividad")
     }
 
     let validationBox = document.getElementById("val-box-actividades");

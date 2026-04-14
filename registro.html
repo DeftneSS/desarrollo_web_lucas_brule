@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta charset="UTF-8"/>
         <title>Recreación UChile</title>
         <link rel="stylesheet" type="text/css" href="styles.css">
     </head>
@@ -11,8 +12,8 @@
                 <h2 id="val-msg-registro" class="validation-message"></h2>
                 <ul id="val-list-registro" class="validation-list"></ul>
             </div>
-            <form name="myForm" class="formulario" action="">
-                <legend>Información Personal</legend>
+            <form name="myForm" class="formulario" action="#" method="POST">
+                <h2>Información Personal</h2>
                 <div id="name-input" class="grupo-input">
                     <label for="name">Nombre de Usuario:</label>
                     <input id="name" name="name" type="text" required>
@@ -34,25 +35,14 @@
                     <input id="password" name="password" type="password" required>
                 </div>
                 <div class="grupo-input">
-                    <label for="type-input">Tipo de Usuario:</label>
+                    <label for="type">Tipo de Usuario:</label>
                     <select id="type" name="type" required>
                         <option value="">-- Seleccione un tipo --</option>
+                        <option value="Pregrado">Pregrado</option>
+                        <option value="Postgrado">Postgrado</option>
+                        <option value="Funcionario">Funcionario</option>
+                        <option value="Academico">Academico</option>
                     </select>
-                </div>
-                <div id="role-input" class="grupo-input">
-                    <label for="role">Rol:</label>
-                    <select id="role" name="role" required>
-                        <option value="">-- Seleccione un rol --</option>
-                    </select>
-                </div>
-                <div id="files-input" class="grupo-input">
-                    <label for="files">Subir Archivos:</label>
-                    <input id="files" name="files" type="file" multiple accept="image/*,.pdf" required>
-
-                </div>
-                <div id="link-input" class="grupo-input">
-                    <label for="link">Link de Perfil:</label>
-                    <input id="link" name="link" type="url" required>
                 </div>
                 <div class="botones">
                     <button type="button" id="envio" onclick="validarFormRegistro()">

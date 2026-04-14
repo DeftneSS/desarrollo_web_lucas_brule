@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
     <head>
+        <meta charset="UTF-8">
         <title>Recreación UChile</title>
         <link rel="stylesheet" type="text/css" href="styles.css">
     </head>
@@ -11,19 +12,30 @@
                 <h2 id="val-msg-actividades" class="validation-message"></h2>
                 <ul id="val-list-actividades" class="validation-list"></ul>
             </div>
-            <form id="ActividadesForm" action="#" method="post" enctype="multipart/form-data">
-                <legend>Información de la Actividad</legend>
+            <form id="ActividadesForm" class="formulario" action="#" method="post" >
+                <h2>Información de la Actividad</h2>
                 <div id="name-input" class="grupo-input">
                     <label for="name">Nombre de la Actividad:</label>
                     <input id="name" name="name" type="text" required>
                 </div>
                 <div id="description-input" class="grupo-input">
                     <label for="description">Descripción:</label>
-                    <textarea id="description" name="description" rows="4" required></textarea>
+                    <textarea id="description" name="description" rows="4" class="no-resize" required></textarea>
                 </div>
                 <div id="date-input" class="grupo-input">
                     <label for="date">Fecha:</label>
                     <input id="date" name="date" type="date" required>
+                </div>
+                <div id="tipo-input" class="grupo-input">
+                    <label for="tipo">Tipo de Actividad:</label>
+                    <select id="tipo" name="tipo" required>
+                        <option value="">-- Seleccione un tipo --</option>
+                        <option value="Artística">Artística</option>
+                        <option value="Deportiva">Deportiva</option>
+                        <option value="Tecnológica">Tecnológica</option>
+                        <option value="Social">Social</option>
+                        <option value="General">General</option>
+                    </select>
                 </div>
                 <div id="file-input" class="grupo-input">
                     <label for="file">Subir Archivo:</label>
@@ -37,6 +49,7 @@
                     <button type="button" id="envio-actividades" onclick="validarFormActividades()">
                         Enviar
                     </button>
+                    <a href="listado.html" class="btn-volver">Volver</a>
                 </div>
             </form>
         </main>
