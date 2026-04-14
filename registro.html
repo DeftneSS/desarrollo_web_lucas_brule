@@ -2,12 +2,16 @@
 <html lang="en">
     <head>
         <title>Recreación UChile</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="styles.css">
     </head>
     <body>
         <main class="container">
             <h1>Registro de Usuario</h1>
-            <form class="formulario" action="">
+            <div id="val-box-registro" class="validation-box" hidden>
+                <h2 id="val-msg-registro" class="validation-message"></h2>
+                <ul id="val-list-registro" class="validation-list"></ul>
+            </div>
+            <form name="myForm" class="formulario" action="">
                 <legend>Información Personal</legend>
                 <div id="name-input" class="grupo-input">
                     <label for="name">Nombre de Usuario:</label>
@@ -25,38 +29,33 @@
                     <label for="phone">Número de Teléfono:</label>
                     <input id="phone" name="phone" type="tel" required>
                 </div>
-                <div class="grupo-input">
-                    <label for="type">Tipo de Usuario:</label>
-                    <select id="type" name="type" required>
-                        <option value="">-- Seleccione un tipo --</option>
-                        <option value="pregrado">Estudiante Pregrado</option>
-                        <option value="postgrado">Estudiante Postgrado</option>
-                        <option value="funcionario">Funcionario</option>
-                        <option value="academico">Académico</option>
-                    </select>
-                </div>
-                <div id="campos-pregrado" class="grupo-input" hidden>
-                    <label for="carrera">Carrera:</label>
-                    <input id="carrera" name="carrera" type="text">
-                </div>
-                <div id="campos-postgrado" class="grupo-input" hidden>
-                    <label for="programa">Programa de Postgrado:</label>
-                    <input id="programa" name="programa" type="text">
-                </div>
-                <div id="campos-funcionario" class="grupo-input" hidden>
-                    <label for="departamento">Departamento:</label>
-                    <input id="departamento" name="departamento" type="text">
-                </div>
-                <div id="campos-academico" class="grupo-input" hidden>
-                    <label for="asignatura">Asignatura:</label>
-                    <input id="asignatura" name="asignatura" type="text">
-                </div>
                 <div id="password-input" class="grupo-input">
                     <label for="password">Contraseña (mínimo 6 caracteres):</label>
                     <input id="password" name="password" type="password" required>
                 </div>
+                <div class="grupo-input">
+                    <label for="type-input">Tipo de Usuario:</label>
+                    <select id="type" name="type" required>
+                        <option value="">-- Seleccione un tipo --</option>
+                    </select>
+                </div>
+                <div id="role-input" class="grupo-input">
+                    <label for="role">Rol:</label>
+                    <select id="role" name="role" required>
+                        <option value="">-- Seleccione un rol --</option>
+                    </select>
+                </div>
+                <div id="files-input" class="grupo-input">
+                    <label for="files">Subir Archivos:</label>
+                    <input id="files" name="files" type="file" multiple accept="image/*,.pdf" required>
+
+                </div>
+                <div id="link-input" class="grupo-input">
+                    <label for="link">Link de Perfil:</label>
+                    <input id="link" name="link" type="url" required>
+                </div>
                 <div class="botones">
-                    <button type="button" id="envio" onclick="validarForm()">
+                    <button type="button" id="envio" onclick="validarFormRegistro()">
                         Registrar
                     </button>
                 </div  >
