@@ -1,9 +1,3 @@
-const data = {
-    TipoUsuario: ["Pregrado", "Postgrado", "Funcionario", "Academico"],
-    
-}
-
-
 const dominiosPermitidos = [
     'uchile.cl',
     'ing.uchile.cl',
@@ -84,6 +78,7 @@ const validarTelefono = (phoneNumber) => {
 }
 
 const validarSelect = (select) => {
+    // El select no debe estar vacío y debe tener una opción seleccionada
     if (!select || select.value === "") {
         return false
     }
