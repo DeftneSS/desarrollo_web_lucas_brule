@@ -7,21 +7,29 @@
     </head>
     <body>
         <main class="container">
-            <h1>Estadísticas</h1>
-            <a href="listado.html" class="btn-registro">Volver</a>
+            <header>
+                <h1>Estadísticas</h1>
+            </header>
+            <nav class="navegacion">
+                <a href="listado.html" class="btn-registro">Volver al Listado</a>
+            </nav>
 
-            <div class="stats-container">
-                <div class="chart-box">
+            <section class="stats-container">
+                <article class="chart-box">
+                    <h2>Miembros por Tipo</h2>
+                    <img src="cake_graph.jpg" alt="Distribución de miembros por tipo" class="chart-img">
+                </article>
+
+                <article class="chart-box">
                     <h2>Actividades por Tipo</h2>
-                    <img src="bar_graph.jpg" alt="Gráfico de barras" style="max-width: 100%; height: auto;">
-                </div>
+                    <img src="bar_graph.jpg" alt="Gráfico de actividades por tipo" class="chart-img">
+                </article>
 
-                <div class="chart-box">
-                    <h3>Distribución de Actividades</h3>
-
-                    <img src="grafico_torta.jpg" alt="Gráfico de torta" style="max-width: 100%; height: auto;">
-                </div>
-            </div>
+                <article class="chart-box">
+                    <h2>Distribución de Actividades</h2>
+                    <img src="grafico_torta.jpg" alt="Gráfico de torta de actividades" class="chart-img">
+                </article>
+            </section>
         </main>
     </body>
 </html>

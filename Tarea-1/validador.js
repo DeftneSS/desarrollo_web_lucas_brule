@@ -1,275 +1,270 @@
 const dominiosPermitidos = [
-    'uchile.cl',
-    'ing.uchile.cl',
-    'dcc.uchile.cl',
-    'ug.uchile.cl',
-    'gmail.com',
-    'outlook.com',
-    'hotmail.com',
-    'yahoo.com',
-    'icloud.com',
-    ]
+    "uchile.cl",
+    "ing.uchile.cl",
+    "dcc.uchile.cl",
+    "ug.uchile.cl",
+    "gmail.com",
+    "outlook.com",
+    "hotmail.com",
+    "yahoo.com",
+    "icloud.com",
+];
 
 const validarMail = (email) => {
-    // El correo electrónico no debe estar vacío, no debe contener solo espacios,}
-    // debe contener un "@" y un ".", y no debe tener más de un "@".
-    if (!email || email.trim() === "" || 
-        !email.includes("@") || !email.includes(".") || 
-        email.split('@').length > 2) {
-
-    return false
+    if (!email || email.trim() === "" ||
+        !email.includes("@") || !email.includes(".") ||
+        email.split("@").length > 2) {
+        return false;
     }
 
-    //Validar formato
     if (!/^[\w.]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(email)) {
-        return false
+        return false;
     }
 
-    // El dominio del correo electrónico debe ser uno de los permitidos
-    const dominio = email.split('@')[1]
+    const dominio = email.split("@")[1];
     if (!dominiosPermitidos.includes(dominio)) {
-        return false
+        return false;
     }
 
-    return true
-}
+    return true;
+};
 
 const validarNombre = (name) => {
-    // El nombre no debe estar vacío, no debe contener solo espacios 
-    // y no debe tener más de un espacio consecutivo
     if (!name || name.trim().length < 2 || /\s{2,}/.test(name)) {
-        return false
+        return false;
     }
-    return true
-}
+    return true;
+};
 
 const validarApellido = (lastName) => {
-    // El apellido no debe estar vacío, no debe contener solo espacios 
-    // y no debe tener más de un espacio consecutivo
     if (!lastName || lastName.trim() === "" || /\s{2,}/.test(lastName)) {
-        return false
+        return false;
     }
-
-    return true
-}
+    return true;
+};
 
 const validarPassword = (password) => {
-    // La contraseña no debe estar vacía, debe tener al menos 6 caracteres 
-    // y no debe contener espacios
-    if (!password || password.trim() === "" || 
-    password.length < 6 || /\s/.test(password)) {
-        return false
+    if (!password || password.trim() === "" ||
+        password.length < 6 || /\s/.test(password)) {
+        return false;
     }
-
-    // La contraseña debe contener al menos una letra mayúscula y un número
     if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-        return false
+        return false;
     }
-    return true
-}
+    return true;
+};
 
 const validarTelefono = (phoneNumber) => {
-    // El número de teléfono no debe estar vacío, debe contener solo dígitos 
-    // y debe tener exactamente 9 dígitos
-    if (!phoneNumber || !/^\d{9,9}$/.test(phoneNumber)) {
-        return false
+    if (!phoneNumber || !/^\d{9}$/.test(phoneNumber)) {
+        return false;
     }
-    return true
-}
+    return true;
+};
 
-const validarSelect = (select) => {
-    // El select no debe estar vacío y debe tener una opción seleccionada
-    if (!select || select.value === "") {
-        return false
+const validarSelect = (value) => {
+    if (!value || value === "") {
+        return false;
     }
-    return true
-}
+    return true;
+};
+
+const validarTextoSimple = (texto) => {
+    if (!texto || texto.trim().length < 2) {
+        return false;
+    }
+    return true;
+};
+
+const validarAnio = (anio) => {
+    if (!anio) return false;
+    const n = Number(anio);
+    return Number.isInteger(n) && n >= 1900 && n <= 2030;
+};
 
 const validarArchivo = (file) => {
-    // El archivo no debe estar vacío y debe ser un PDF o una imagen
     if (!file || file.length < 1) {
-        return false
+        return false;
     }
-    const fileObj = file[0]
-    if (fileObj.type !== "application/pdf" && fileObj.type.split('/')[0] !== "image") {
-        return false
+    const fileObj = file[0];
+    const tipo = fileObj.type.split("/")[0];
+    if (tipo !== "image" && tipo !== "video") {
+        return false;
     }
-    return true
-}
+    return true;
+};
 
 const validarLink = (link) => {
-    // El link no debe estar vacío
     if (!link || link.trim() === "") {
-        return false
+        return false;
     }
-    
-    // El link debe ser una URL válida (debe empezar con http o https)
     if (!/^https?:\/\/.+/.test(link)) {
-        return false
+        return false;
     }
-    
-    return true
-}
+    return true;
+};
 
+const validarHora = (hora) => {
+    if (!hora || hora.trim() === "") {
+        return false;
+    }
+    return /^([01]\d|2[0-3]):[0-5]\d$/.test(hora);
+};
 
+const validarRangoHorario = (inicio, fin) => {
+    if (!validarHora(inicio) || !validarHora(fin)) return false;
+    return inicio < fin;
+};
+
+const validarFecha = (fecha) => {
+    if (!fecha || fecha.trim() === "") return false;
+    return /^\d{4}-\d{2}-\d{2}$/.test(fecha);
+};
+
+const mostrarCamposPorTipo = () => {
+    const tipo = document.getElementById("type").value;
+    const estudiante = document.getElementById("campos-estudiante");
+    const funcionario = document.getElementById("campos-funcionario");
+    const academico = document.getElementById("campos-academico");
+
+    estudiante.hidden = !(tipo === "Pregrado" || tipo === "Postgrado");
+    funcionario.hidden = tipo !== "Funcionario";
+    academico.hidden = tipo !== "Academico";
+};
 
 const validarFormRegistro = () => {
-    console.log("Enviando formulario...");
+    const myForm = document.forms["myForm"];
+    const nameInput = myForm["name"].value;
+    const lastNameInput = myForm["lastname"].value;
+    const emailInput = myForm["email"].value;
+    const passwordInput = myForm["password"].value;
+    const phoneInput = myForm["phone"].value;
+    const typeInput = myForm["type"].value;
 
-    let myForm = document.forms["myForm"];
-    let nameInput = myForm["name"].value;
-    let lastNameInput = myForm["lastname"].value;
-    let emailInput = myForm["email"].value;
-    let passwordInput = myForm["password"].value;
-    let phoneInput = myForm["phone"].value;
-    let typeInput = myForm["type"].value;
-
-    
-    let invalidInputs = []
-    let isValid = true
+    const invalidInputs = [];
 
     const setInvalidInput = (input) => {
-        invalidInputs.push(input)
-        isValid &&= false
+        invalidInputs.push(input);
+    };
+
+    if (!validarNombre(nameInput)) setInvalidInput("Nombre");
+    if (!validarApellido(lastNameInput)) setInvalidInput("Apellido");
+    if (!validarMail(emailInput)) setInvalidInput("Correo Electrónico");
+    if (!validarPassword(passwordInput)) setInvalidInput("Contraseña");
+    if (!validarTelefono(phoneInput)) setInvalidInput("Número de Teléfono");
+    if (!validarSelect(typeInput)) setInvalidInput("Tipo de Usuario");
+
+    if (typeInput === "Pregrado" || typeInput === "Postgrado") {
+        if (!validarTextoSimple(myForm["carrera"].value)) setInvalidInput("Carrera");
+        if (!validarAnio(myForm["anio-ingreso"].value)) setInvalidInput("Año de Ingreso");
+    } else if (typeInput === "Funcionario") {
+        if (!validarTextoSimple(myForm["departamento"].value)) setInvalidInput("Departamento");
+        if (!validarTextoSimple(myForm["cargo"].value)) setInvalidInput("Cargo");
+    } else if (typeInput === "Academico") {
+        if (!validarTextoSimple(myForm["area"].value)) setInvalidInput("Área de Investigación");
+        if (!validarSelect(myForm["grado"].value)) setInvalidInput("Grado Académico");
     }
 
+    const validationBox = document.getElementById("val-box-registro");
+    const validationMessageElem = document.getElementById("val-msg-registro");
+    const validationListElem = document.getElementById("val-list-registro");
 
-    if (!validarNombre(nameInput)) {
-        setInvalidInput("Nombre")
-    }
+    validationListElem.textContent = "";
 
-    if (!validarApellido(lastNameInput)) {
-        setInvalidInput("Apellido")
-    }
-
-    if (!validarMail(emailInput)) {
-        setInvalidInput("Correo Electrónico")
-    }
-
-    if (!validarPassword(passwordInput)) {
-        setInvalidInput("Contraseña")
-    }
-
-    if (!validarTelefono(phoneInput)) {
-        setInvalidInput("Número de Teléfono")
-    }
-
-    if (!validarSelect(typeInput)) {
-        setInvalidInput("Tipo de Usuario")
-    }
-
-
-    let validationBox = document.getElementById("val-box-registro");
-    let validationMessageElem = document.getElementById("val-msg-registro");
-    let validationListElem = document.getElementById("val-list-registro");
-
-    if (!isValid) {
-        validationListElem.textContent = "";
-
-        for (input of invalidInputs) {
-            let listElem = document.createElement("li");
+    if (invalidInputs.length > 0) {
+        for (const input of invalidInputs) {
+            const listElem = document.createElement("li");
             listElem.innerText = input;
             validationListElem.appendChild(listElem);
         }
 
         validationMessageElem.innerText = "Los siguientes campos son inválidos:";
-
-        validationBox.style.backgroundColor = "#c8a2a5";
-        validationBox.style.borderColor = "red";
-
+        validationMessageElem.style.color = "#721c24";
+        validationListElem.style.color = "#721c24";
+        validationBox.style.backgroundColor = "#f8d7da";
+        validationBox.style.borderColor = "#721c24";
         validationBox.hidden = false;
     } else {
-
         myForm.style.display = "none";
         validationMessageElem.innerText = "¡Registro exitoso!";
-        validationBox.style.backgroundColor = "#a2c8a5";
-        validationBox.style.borderColor = "green";
-        validationListElem.textContent = "";
+        validationMessageElem.style.color = "#155724";
+        validationListElem.style.color = "#155724";
+        validationBox.style.backgroundColor = "#d4edda";
+        validationBox.style.borderColor = "#155724";
         validationBox.hidden = false;
 
-        let continueButton = document.createElement("button");
+        const continueButton = document.createElement("button");
+        continueButton.type = "button";
         continueButton.innerText = "Continuar";
-        continueButton.style.marginRight = "10px";
         continueButton.onclick = () => {
             window.location.href = "listado.html";
-        }
-
+        };
         validationListElem.appendChild(continueButton);
-
     }
-
-    let submitBtn = document.getElementById("envio");
-    submitBtn.addEventListener("click", validarFormRegistro);
-
-}
-
+};
 
 const validarFormActividades = () => {
-    console.log("Enviando formulario...");
+    const actividadesForm = document.forms["ActividadesForm"];
+    const nameInput = actividadesForm["name"].value;
+    const descriptionInput = actividadesForm["description"].value;
+    const dateInput = actividadesForm["date"].value;
+    const timeStartInput = actividadesForm["time-start"].value;
+    const timeEndInput = actividadesForm["time-end"].value;
+    const tipoInput = actividadesForm["tipo"].value;
+    const fileInput = actividadesForm["file"].files;
+    const linkInput = actividadesForm["link"].value;
 
-    let ActividadesForm = document.forms["ActividadesForm"];
-    let fileInput = ActividadesForm["file"].files;
-    let linkInput = ActividadesForm["link"].value;
-    let actividadesInput = ActividadesForm["tipo"].value;
-
-    let invalidInputs = []
-    let isValid = true
+    const invalidInputs = [];
 
     const setInvalidInput = (input) => {
-        invalidInputs.push(input)
-        isValid &&= false
+        invalidInputs.push(input);
+    };
+
+    if (!validarTextoSimple(nameInput)) setInvalidInput("Nombre de la Actividad");
+    if (!validarTextoSimple(descriptionInput)) setInvalidInput("Descripción");
+    if (!validarFecha(dateInput)) setInvalidInput("Fecha");
+    if (!validarHora(timeStartInput)) setInvalidInput("Hora de Inicio");
+    if (!validarHora(timeEndInput)) setInvalidInput("Hora de Término");
+    if (validarHora(timeStartInput) && validarHora(timeEndInput) && !validarRangoHorario(timeStartInput, timeEndInput)) {
+        setInvalidInput("Rango horario (la hora de término debe ser posterior al inicio)");
     }
+    if (!validarSelect(tipoInput)) setInvalidInput("Tipo de Actividad");
+    if (!validarArchivo(fileInput)) setInvalidInput("Archivo (foto o video)");
+    if (!validarLink(linkInput)) setInvalidInput("Link");
 
-    if (!validarArchivo(fileInput)){
-        setInvalidInput("Archivo")
-    }
+    const validationBox = document.getElementById("val-box-actividades");
+    const validationMessageElem = document.getElementById("val-msg-actividades");
+    const validationListElem = document.getElementById("val-list-actividades");
 
-    if (!validarLink(linkInput)) {
-        setInvalidInput("Link")
-    }
+    validationListElem.textContent = "";
 
-    if (!validarSelect(actividadesInput)) {
-        setInvalidInput("Actividad")
-    }
-
-    let validationBox = document.getElementById("val-box-actividades");
-    let validationMessageElem = document.getElementById("val-msg-actividades");
-    let validationListElem = document.getElementById("val-list-actividades");
-
-    if (!isValid) {
-        validationListElem.textContent = "";
-        for (input of invalidInputs) {
-            let listElem = document.createElement("li");
+    if (invalidInputs.length > 0) {
+        for (const input of invalidInputs) {
+            const listElem = document.createElement("li");
             listElem.innerText = input;
             validationListElem.appendChild(listElem);
         }
 
         validationMessageElem.innerText = "Los siguientes campos son inválidos:";
-
-        validationBox.style.backgroundColor = "#c8a2a5";
-        validationBox.style.borderColor = "red";
-
+        validationMessageElem.style.color = "#721c24";
+        validationListElem.style.color = "#721c24";
+        validationBox.style.backgroundColor = "#f8d7da";
+        validationBox.style.borderColor = "#721c24";
         validationBox.hidden = false;
-
     } else {
-
-        ActividadesForm.style.display = "none";
-        validationMessageElem.innerText = "¡Archivo subido exitosamente!";
-        validationBox.style.backgroundColor = "#a2c8a5";
-        validationBox.style.borderColor = "green";
-        validationListElem.textContent = "";
+        actividadesForm.style.display = "none";
+        validationMessageElem.innerText = "¡Actividad registrada exitosamente!";
+        validationMessageElem.style.color = "#155724";
+        validationListElem.style.color = "#155724";
+        validationBox.style.backgroundColor = "#d4edda";
+        validationBox.style.borderColor = "#155724";
         validationBox.hidden = false;
 
-        let continueButton = document.createElement("button");
-        continueButton.innerText = "Subir";
-        continueButton.style.marginRight = "10px";
+        const continueButton = document.createElement("button");
+        continueButton.type = "button";
+        continueButton.innerText = "Volver al Listado";
         continueButton.onclick = () => {
-            window.location.href = "activ-historial.html";
-        }
-
+            window.location.href = "listado.html";
+        };
         validationListElem.appendChild(continueButton);
     }
-
-    let submitBtn = document.getElementById("envio-actividades");
-    submitBtn.addEventListener("click", validarFormActividades);
-}
+};

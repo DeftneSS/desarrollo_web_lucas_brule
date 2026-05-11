@@ -150,3 +150,56 @@ table tr:hover {
 table tr:last-child td {
     border-bottom: none;
 }
+
+.navegacion {
+    display: flex;
+    flex-direction: column;
+}
+
+.filtros {
+    background: white;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.filtros .grupo-input {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 0;
+}
+
+.paginacion {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.paginacion button {
+    width: auto;
+    padding: 8px 12px;
+}
+
+.paginacion span {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin: 0 15px;
+}
+
+.paginacion button:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+}
+
+.chart-img {
+    max-width: 100%;
+    height: auto;
+}
+
+.campos-condicionales {
+    border-left: 3px solid #007bff;
+    padding-left: 15px;
+    margin-bottom: 15px;
+}
