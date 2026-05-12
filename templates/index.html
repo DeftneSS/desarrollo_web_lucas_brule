@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Recreación UChile</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+    <body>
+        <main class="container">
+            <header>
+                <h1>Bienvenido{% if user %}, {{ user.nombre }}{% endif %}</h1>
+                <p style="text-align:right;">
+                    {% if user %}
+                        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}">Iniciar sesión</a>
+                    {% endif %}
+                </p>
+            </header>
+
+            {% with mensajes = get_flashed_messages(with_categories=true) %}
+                {% if mensajes %}
+                    <div class="validation-box" style="background:#d4edda;border:1px solid #155724;color:#155724;padding:15px;margin-bottom:20px;border-radius:5px;">
+                        {% for cat, msg in mensajes %}
+                            <p>{{ msg }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <nav class="navegacion">
+                {% if not user %}
+                    <a href="{{ url_for('registro') }}" class="btn-registro">Registrar Miembro</a>
+                {% endif %}
+                {% if user %}
+                    <a href="{{ url_for('actividades') }}" class="btn-registro">Nueva Actividad</a>
+                {% endif %}
+                <a href="{{ url_for('listado') }}" class="btn-registro">Listado de Miembros</a>
+                <a href="{{ url_for('estadisticas') }}" class="btn-registro">Estadísticas</a>
+            </nav>
+
+            <section>
+                <h2>Últimos miembros registrados</h2>
+                {% if miembros %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Correo</th>
+                                <th>Teléfono</th>
+                                <th>Tipo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for m in miembros %}
+                                {% set detalle_url = url_for('miembro_detalle', id=m.id) %}
+                                <tr onclick="window.location='{{ detalle_url }}'" style="cursor:pointer;">
+                                    <td>{{ m.nombre }}</td>
+                                    <td>{{ m.apellido }}</td>
+                                    <td>{{ m.email }}</td>
+                                    <td>{{ m.telefono }}</td>
+                                    <td>{{ m.tipo }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>Aún no hay miembros registrados.</p>
+                {% endif %}
+            </section>
+        </main>
+    </body>
+</html>

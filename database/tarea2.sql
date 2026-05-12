@@ -2,6 +2,12 @@
 -- Mon Apr 20 23:54:45 2026
 -- Model: New Model    Version: 1.0
 -- MySQL Workbench Forward Engineering
+--
+-- Modificado para Tarea 2 (Lucas Brule): se extiende `miembro` con apellido,
+-- password, tipo y campos condicionales por tipo (carrera/anio_ingreso/depto/
+-- cargo/area_investigacion/grado_academico). Se cambia `actividad`: `dia` →
+-- `fecha`, `duracion` → `hora_fin`, se agrega `link`, y los valores de ENUM
+-- `tipo` ahora coinciden con los del form de Tarea 1.
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -51,10 +57,19 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `tarea2`.`miembro` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(255) NOT NULL,
+  `apellido` VARCHAR(255) NOT NULL,
   `email` VARCHAR(80) NOT NULL,
   `telefono` VARCHAR(15) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `tipo` ENUM('Pregrado', 'Postgrado', 'Funcionario', 'Academico') NOT NULL,
   `fecha_registro` DATETIME NOT NULL,
   `comuna_id` INT NOT NULL,
+  `carrera` VARCHAR(255) NULL,
+  `anio_ingreso` INT NULL,
+  `departamento` VARCHAR(255) NULL,
+  `cargo` VARCHAR(255) NULL,
+  `area_investigacion` VARCHAR(255) NULL,
+  `grado_academico` ENUM('Licenciado', 'Magister', 'Doctor') NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_miembro_comuna1_idx` (`comuna_id` ASC),
   CONSTRAINT `fk_miembro_comuna1`
@@ -71,12 +86,13 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `tarea2`.`actividad` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `miembro_id` INT NOT NULL,
-  `dia` ENUM('lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo') NOT NULL,
+  `nombre` VARCHAR(255) NOT NULL,
+  `descripcion` TEXT NULL,
+  `fecha` DATE NOT NULL,
   `hora_inicio` VARCHAR(5) NOT NULL,
-  `duracion` VARCHAR(5) NOT NULL,
-  `tipo` ENUM('arte', 'deporte', 'tecnología', 'social', 'recreación', 'otra') NOT NULL,
-  `nombre` VARCHAR(45) NOT NULL,
-  `descripcion` TEXT(500) NULL,
+  `hora_fin` VARCHAR(5) NOT NULL,
+  `tipo` ENUM('Artistica', 'Deportiva', 'Tecnologica', 'Social', 'General') NOT NULL,
+  `link` VARCHAR(500) NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_actividad_miembro1_idx` (`miembro_id` ASC),
   CONSTRAINT `fk_actividad_miembro1`

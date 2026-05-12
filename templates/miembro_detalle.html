@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Recreación UChile - Miembro</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+    <body>
+        <main class="container">
+            <header>
+                <h1>{{ miembro.nombre }} {{ miembro.apellido }}</h1>
+            </header>
+
+            <nav class="navegacion">
+                <a href="{{ url_for('listado') }}" class="btn-registro">Volver al Listado</a>
+            </nav>
+
+            <section class="formulario">
+                <h2>Datos del Miembro</h2>
+                <p><strong>Correo:</strong> {{ miembro.email }}</p>
+                <p><strong>Teléfono:</strong> {{ miembro.telefono }}</p>
+                <p><strong>Tipo:</strong> {{ miembro.tipo }}</p>
+                <p><strong>Comuna:</strong> {{ miembro.comuna.nombre }} ({{ miembro.comuna.region.nombre }})</p>
+                <p><strong>Fecha de registro:</strong> {{ miembro.fecha_registro.strftime('%Y-%m-%d %H:%M') }}</p>
+
+                {% if miembro.tipo in ('Pregrado', 'Postgrado') %}
+                    <p><strong>Carrera:</strong> {{ miembro.carrera }}</p>
+                    <p><strong>Año de Ingreso:</strong> {{ miembro.anio_ingreso }}</p>
+                {% elif miembro.tipo == 'Funcionario' %}
+                    <p><strong>Departamento:</strong> {{ miembro.departamento }}</p>
+                    <p><strong>Cargo:</strong> {{ miembro.cargo }}</p>
+                {% elif miembro.tipo == 'Academico' %}
+                    <p><strong>Área de Investigación:</strong> {{ miembro.area_investigacion }}</p>
+                    <p><strong>Grado Académico:</strong> {{ miembro.grado_academico }}</p>
+                {% endif %}
+            </section>
+
+            <section class="formulario" style="margin-top:20px;">
+                <h2>Actividades</h2>
+                {% if miembro.actividades %}
+                    {% for a in miembro.actividades %}
+                        <article style="border-top:1px solid #ddd;padding:15px 0;">
+                            <h3>{{ a.nombre }} <small>({{ a.tipo }})</small></h3>
+                            <p>{{ a.descripcion }}</p>
+                            <p><strong>Fecha:</strong> {{ a.fecha.strftime('%Y-%m-%d') }} | <strong>Horario:</strong> {{ a.hora_inicio }} a {{ a.hora_fin }}</p>
+                            {% if a.link %}
+                                <p><strong>Link:</strong> <a href="{{ a.link }}" target="_blank" rel="noopener">{{ a.link }}</a></p>
+                            {% endif %}
+                            {% if a.fotos %}
+                                <div style="display:flex;flex-wrap:wrap;gap:10px;">
+                                    {% for foto in a.fotos %}
+                                        {% set ext = foto.nombre_archivo.split('.')[-1]|lower %}
+                                        {% if ext in ['mp4', 'webm', 'mov', 'ogg'] %}
+                                            <video src="{{ url_for('static', filename='uploads/' + foto.ruta_archivo.split('/')[-1]) }}" controls style="max-width:200px;"></video>
+                                        {% else %}
+                                            <img src="{{ url_for('static', filename='uploads/' + foto.ruta_archivo.split('/')[-1]) }}" alt="{{ foto.nombre_archivo }}" style="max-width:200px;">
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </article>
+                    {% endfor %}
+                {% else %}
+                    <p>Este miembro aún no tiene actividades registradas.</p>
+                {% endif %}
+            </section>
+        </main>
+    </body>
+</html>
