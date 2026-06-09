@@ -10,26 +10,27 @@
             <header>
                 <h1>Estadísticas</h1>
             </header>
-            <nav class="navegacion">
-                <a href="{{ url_for('listado') }}" class="btn-registro">Volver al Listado</a>
-                <a href="{{ url_for('index') }}" class="btn-registro">Volver al Inicio</a>
-            </nav>
+
             <section class="stats-container">
                 <article class="chart-box">
-                    <h2>Miembros por Tipo</h2>
-                    <img src="{{ url_for('static', filename='cake_graph.jpg') }}" alt="Distribución de miembros por tipo" class="chart-img">
+                    <div id="grafico-miembros-por-dia" class="grafico"></div>
                 </article>
 
                 <article class="chart-box">
-                    <h2>Actividades por Tipo</h2>
-                    <img src="{{ url_for('static', filename='bar_graph.jpg') }}" alt="Gráfico de actividades por tipo" class="chart-img">
+                    <div id="grafico-actividades-por-tipo" class="grafico"></div>
                 </article>
 
                 <article class="chart-box">
-                    <h2>Distribución de Actividades</h2>
-                    <img src="{{ url_for('static', filename='grafico_torta.jpg') }}" alt="Gráfico de torta de actividades" class="chart-img">
+                    <div id="grafico-actividades-por-comuna" class="grafico"></div>
                 </article>
             </section>
+
+            <nav class="navegacion">
+                <a href="{{ url_for('index') }}" class="btn-registro">Volver al Inicio</a>
+            </nav>
         </main>
+
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="{{ url_for('static', filename='estadisticas.js') }}"></script>
     </body>
 </html>

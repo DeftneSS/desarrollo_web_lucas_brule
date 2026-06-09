@@ -2,6 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import (
     create_engine, Column, Integer, String, Text, Date, DateTime, Enum, ForeignKey,
+    TIMESTAMP, func,
 )
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship, joinedload
 
@@ -94,6 +95,18 @@ class Foto(Base):
     actividad_id = Column(Integer, ForeignKey("actividad.id"), nullable=False)
 
     actividad = relationship("Actividad", back_populates="fotos")
+
+
+class Comentario(Base):
+    __tablename__ = "comentario"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nombre = Column(String(80), nullable=False)
+    texto = Column(String(300), nullable=False)
+    fecha = Column(TIMESTAMP, nullable=False, server_default=func.current_timestamp())
+    actividad_id = Column(Integer, ForeignKey("actividad.id"), nullable=False)
+
+    actividad = relationship("Actividad", backref="comentarios")
 
 
 # --- Paginación ---
@@ -219,6 +232,105 @@ def verify_login(email, password):
     if m is None or m.password != password:
         return False, "Email o contraseña incorrectos."
     return True, m.id
+
+
+# actividad - lectura
+def get_actividad_by_id(id):
+    session = SessionLocal()
+    actividad = (
+        session.query(Actividad)
+        .options(
+            joinedload(Actividad.miembro),
+            joinedload(Actividad.fotos),
+        )
+        .filter_by(id=id)
+        .first()
+    )
+    session.close()
+    return actividad
+
+
+# comentarios
+def get_comentarios_by_actividad(actividad_id):
+    session = SessionLocal()
+    comentarios = (
+        session.query(Comentario)
+        .filter_by(actividad_id=actividad_id)
+        .order_by(Comentario.fecha.desc())
+        .all()
+    )
+    session.close()
+    return comentarios
+
+
+def create_comentario(data):
+    session = SessionLocal()
+    nuevo = Comentario(**data)
+    session.add(nuevo)
+    session.commit()
+    new_id = nuevo.id
+    fecha = nuevo.fecha
+    session.close()
+    return new_id, fecha
+
+
+def register_comentario(data):
+    try:
+        data["fecha"] = datetime.now()
+        new_id, fecha = create_comentario(data)
+        return True, {"id": new_id, "fecha": fecha.isoformat() if fecha else None}
+    except Exception as e:
+        return False, f"Error al guardar el comentario: {e}"
+
+
+# estadísticas
+def stats_miembros_por_dia():
+    session = SessionLocal()
+    rows = (
+        session.query(
+            func.date(Miembro.fecha_registro).label("dia"),
+            func.count(Miembro.id).label("total"),
+        )
+        .group_by(func.date(Miembro.fecha_registro))
+        .order_by(func.date(Miembro.fecha_registro))
+        .all()
+    )
+    session.close()
+    return [{"dia": r.dia.isoformat(), "total": r.total} for r in rows]
+
+
+def stats_actividades_por_tipo():
+    session = SessionLocal()
+    rows = (
+        session.query(
+            Actividad.tipo,
+            func.count(Actividad.id).label("total"),
+        )
+        .group_by(Actividad.tipo)
+        .all()
+    )
+    session.close()
+    return [{"tipo": r.tipo, "total": r.total} for r in rows]
+
+
+def stats_actividades_por_comuna():
+    """Comunas para las cuales se han registrado miembros (vía INNER JOIN),
+    con el total de actividades de esos miembros (vía OUTER JOIN para que las
+    comunas con miembros pero sin actividades aparezcan con total = 0)."""
+    session = SessionLocal()
+    rows = (
+        session.query(
+            Comuna.nombre.label("comuna"),
+            func.count(Actividad.id).label("total"),
+        )
+        .join(Miembro, Miembro.comuna_id == Comuna.id)
+        .outerjoin(Actividad, Actividad.miembro_id == Miembro.id)
+        .group_by(Comuna.id, Comuna.nombre)
+        .order_by(Comuna.nombre)
+        .all()
+    )
+    session.close()
+    return [{"comuna": r.comuna, "total": r.total} for r in rows]
 
 
 # miembro - escritura

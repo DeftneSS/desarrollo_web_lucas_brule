@@ -2,7 +2,7 @@ import os
 import hashlib
 from datetime import datetime
 
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from werkzeug.utils import secure_filename
 import filetype
 
@@ -10,6 +10,7 @@ from database import db
 from utils.validations import (
     validate_register_miembro,
     validate_register_actividad,
+    validate_register_comentario,
     TIPOS_USUARIO,
 )
 
@@ -211,6 +212,83 @@ def miembro_detalle(id):
         flash("El miembro solicitado no existe.", "error")
         return redirect(url_for("listado"))
     return render_template("miembro_detalle.html", miembro=miembro)
+
+
+@app.route("/actividad/<int:id>")
+def actividad_detalle(id):
+    actividad = db.get_actividad_by_id(id)
+    if actividad is None:
+        flash("La actividad solicitada no existe.", "error")
+        return redirect(url_for("listado"))
+    return render_template("actividad_detalle.html", actividad=actividad)
+
+
+# --- API: comentarios (async) ---
+@app.route("/api/actividades/<int:id>/comentarios", methods=["GET"])
+def api_comentarios_listar(id):
+    if db.get_actividad_by_id(id) is None:
+        return jsonify({"error": "Actividad no encontrada"}), 404
+    comentarios = db.get_comentarios_by_actividad(id)
+    return jsonify([
+        {
+            "id": c.id,
+            "nombre": c.nombre,
+            "texto": c.texto,
+            "fecha": c.fecha.strftime("%Y-%m-%d %H:%M") if c.fecha else None,
+        }
+        for c in comentarios
+    ])
+
+
+@app.route("/api/actividades/<int:id>/comentarios", methods=["POST"])
+def api_comentarios_agregar(id):
+    if db.get_actividad_by_id(id) is None:
+        return jsonify({"error": "Actividad no encontrada"}), 404
+
+    if "miembro_id" not in session:
+        return jsonify({"errores": ["Debes iniciar sesión para comentar."]}), 401
+
+    miembro = db.get_miembro_by_id(session["miembro_id"])
+    if miembro is None:
+        return jsonify({"errores": ["Sesión inválida."]}), 401
+
+    data = request.get_json(silent=True) or {}
+    nombre_completo = f"{miembro.nombre} {miembro.apellido}"[:80]
+    payload = {
+        "nombre": nombre_completo,
+        "texto": (data.get("texto") or "").strip(),
+    }
+    errores = validate_register_comentario(payload)
+    if errores:
+        return jsonify({"errores": errores}), 400
+
+    payload["actividad_id"] = id
+    status, result = db.register_comentario(payload)
+    if not status:
+        return jsonify({"errores": [result]}), 500
+
+    return jsonify({
+        "id": result["id"],
+        "nombre": payload["nombre"],
+        "texto": payload["texto"],
+        "fecha": result["fecha"].replace("T", " ")[:16] if result["fecha"] else None,
+    }), 201
+
+
+# --- API: estadísticas (async) ---
+@app.route("/api/estadisticas/miembros-por-dia")
+def api_stats_miembros_por_dia():
+    return jsonify(db.stats_miembros_por_dia())
+
+
+@app.route("/api/estadisticas/actividades-por-tipo")
+def api_stats_actividades_por_tipo():
+    return jsonify(db.stats_actividades_por_tipo())
+
+
+@app.route("/api/estadisticas/actividades-por-comuna")
+def api_stats_actividades_por_comuna():
+    return jsonify(db.stats_actividades_por_comuna())
 
 
 @app.route("/estadisticas")

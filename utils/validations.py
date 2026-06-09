@@ -157,6 +157,32 @@ def validate_register_miembro(form):
     return errores
 
 
+def validar_nombre_comentarista(s):
+    """Obligatorio, mínimo 3 caracteres, máximo 80."""
+    if not s or not isinstance(s, str):
+        return False
+    s = s.strip()
+    return 3 <= len(s) <= 80
+
+
+def validar_texto_comentario(s):
+    """Obligatorio, mínimo 5 caracteres, máximo 300 (límite de la BD)."""
+    if not s or not isinstance(s, str):
+        return False
+    s = s.strip()
+    return 5 <= len(s) <= 300
+
+
+def validate_register_comentario(data):
+    """Valida los datos de un nuevo comentario. Devuelve lista de errores."""
+    errores = []
+    if not validar_nombre_comentarista(data.get("nombre", "")):
+        errores.append("Nombre del comentarista (entre 3 y 80 caracteres)")
+    if not validar_texto_comentario(data.get("texto", "")):
+        errores.append("Texto del comentario (entre 5 y 300 caracteres)")
+    return errores
+
+
 def validate_register_actividad(form, archivos, miembro_id_from_session=None):
     """Devuelve lista de errores. Vacía = válido.
 

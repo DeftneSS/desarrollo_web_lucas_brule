@@ -35,29 +35,18 @@
                 {% endif %}
             </section>
 
-            <section class="formulario" style="margin-top:20px;">
+            <section class="formulario seccion-actividades">
                 <h2>Actividades</h2>
                 {% if miembro.actividades %}
                     {% for a in miembro.actividades %}
-                        <article style="border-top:1px solid #ddd;padding:15px 0;">
-                            <h3>{{ a.nombre }} <small>({{ a.tipo }})</small></h3>
-                            <p>{{ a.descripcion }}</p>
+                        {% set actividad_url = url_for('actividad_detalle', id=a.id) %}
+                        <article class="resumen-actividad">
+                            <h3>
+                                <a href="{{ actividad_url }}">{{ a.nombre }}</a>
+                                <small>({{ a.tipo }})</small>
+                            </h3>
                             <p><strong>Fecha:</strong> {{ a.fecha.strftime('%Y-%m-%d') }} | <strong>Horario:</strong> {{ a.hora_inicio }} a {{ a.hora_fin }}</p>
-                            {% if a.link %}
-                                <p><strong>Link:</strong> <a href="{{ a.link }}" target="_blank" rel="noopener">{{ a.link }}</a></p>
-                            {% endif %}
-                            {% if a.fotos %}
-                                <div style="display:flex;flex-wrap:wrap;gap:10px;">
-                                    {% for foto in a.fotos %}
-                                        {% set ext = foto.nombre_archivo.split('.')[-1]|lower %}
-                                        {% if ext in ['mp4', 'webm', 'mov', 'ogg'] %}
-                                            <video src="{{ url_for('static', filename='uploads/' + foto.ruta_archivo.split('/')[-1]) }}" controls style="max-width:200px;"></video>
-                                        {% else %}
-                                            <img src="{{ url_for('static', filename='uploads/' + foto.ruta_archivo.split('/')[-1]) }}" alt="{{ foto.nombre_archivo }}" style="max-width:200px;">
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
+                            <p><a href="{{ actividad_url }}">Ver actividad y comentarios →</a></p>
                         </article>
                     {% endfor %}
                 {% else %}
