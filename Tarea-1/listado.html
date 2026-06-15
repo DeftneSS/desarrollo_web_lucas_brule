@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Recreación UChile - Listado de Miembros</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+    </head>
+    <body>
+        <main class="container">
+            <header>
+                <h1>Listado de Miembros</h1>
+            </header>
+
+            <nav class="navegacion">
+                <a href="registro.html" class="btn-registro">Registrar Miembro</a>
+                <a href="actividades.html" class="btn-registro">Nueva Actividad</a>
+                <a href="estadisticas.html" class="btn-registro">Estadísticas</a>
+            </nav>
+
+            <section class="filtros" aria-label="Filtros y ordenamiento">
+                <div class="grupo-input">
+                    <label for="filtro-tipo">Filtrar por tipo:</label>
+                    <select id="filtro-tipo" onchange="aplicarFiltros()">
+                        <option value="">Todos</option>
+                        <option value="Pregrado">Pregrado</option>
+                        <option value="Postgrado">Postgrado</option>
+                        <option value="Funcionario">Funcionario</option>
+                        <option value="Academico">Académico</option>
+                    </select>
+                </div>
+                <div class="grupo-input">
+                    <label for="orden">Ordenar por:</label>
+                    <select id="orden" onchange="aplicarFiltros()">
+                        <option value="nombre-asc">Nombre (A-Z)</option>
+                        <option value="nombre-desc">Nombre (Z-A)</option>
+                        <option value="apellido-asc">Apellido (A-Z)</option>
+                        <option value="apellido-desc">Apellido (Z-A)</option>
+                        <option value="email-asc">Correo (A-Z)</option>
+                        <option value="email-desc">Correo (Z-A)</option>
+                    </select>
+                </div>
+            </section>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
+                        <th>Tipo</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-miembros"></tbody>
+            </table>
+
+            <nav class="paginacion" aria-label="Paginación">
+                <button type="button" id="btn-prev" onclick="cambiarPagina(-1)">←</button>
+                <span id="info-pagina"></span>
+                <button type="button" id="btn-next" onclick="cambiarPagina(1)">→</button>
+            </nav>
+        </main>
+        <script src="listado.js"></script>
+    </body>
+</html>
