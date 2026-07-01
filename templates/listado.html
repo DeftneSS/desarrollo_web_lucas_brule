@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Recreación UChile - Listado de Miembros</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+    <body>
+        <main class="container">
+            <header>
+                <h1>Listado de Miembros</h1>
+            </header>
+
+            <nav class="navegacion">
+                <a href="{{ url_for('registro') }}" class="btn-registro">Registrar Miembro</a>
+                <a href="{{ url_for('actividades') }}" class="btn-registro">Nueva Actividad</a>
+                <a href="{{ url_for('estadisticas') }}" class="btn-registro">Estadísticas</a>
+                <a href="{{ url_for('index') }}" class="btn-registro">Volver al Inicio</a>
+            </nav>
+
+            <form method="get" action="{{ url_for('listado') }}" class="filtros">
+                <div class="grupo-input">
+                    <label for="filtro-tipo">Filtrar por tipo:</label>
+                    <select id="filtro-tipo" name="tipo" onchange="this.form.submit()">
+                        <option value="">Todos</option>
+                        <option value="Pregrado" {% if tipo == 'Pregrado' %}selected{% endif %}>Pregrado</option>
+                        <option value="Postgrado" {% if tipo == 'Postgrado' %}selected{% endif %}>Postgrado</option>
+                        <option value="Funcionario" {% if tipo == 'Funcionario' %}selected{% endif %}>Funcionario</option>
+                        <option value="Academico" {% if tipo == 'Academico' %}selected{% endif %}>Académico</option>
+                    </select>
+                </div>
+                <div class="grupo-input">
+                    <label for="orden">Ordenar por:</label>
+                    <select id="orden" name="orden" onchange="this.form.submit()">
+                        <option value="nombre-asc"   {% if orden == 'nombre-asc'   %}selected{% endif %}>Nombre (A-Z)</option>
+                        <option value="nombre-desc"  {% if orden == 'nombre-desc'  %}selected{% endif %}>Nombre (Z-A)</option>
+                        <option value="apellido-asc" {% if orden == 'apellido-asc' %}selected{% endif %}>Apellido (A-Z)</option>
+                        <option value="apellido-desc"{% if orden == 'apellido-desc'%}selected{% endif %}>Apellido (Z-A)</option>
+                        <option value="email-asc"    {% if orden == 'email-asc'    %}selected{% endif %}>Correo (A-Z)</option>
+                        <option value="email-desc"   {% if orden == 'email-desc'   %}selected{% endif %}>Correo (Z-A)</option>
+                    </select>
+                </div>
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
+                        <th>Tipo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in paginacion.items %}
+                        {% set detalle_url = url_for('miembro_detalle', id=m.id) %}
+                        <tr onclick="window.location='{{ detalle_url }}'" style="cursor:pointer;">
+                            <td>{{ m.nombre }}</td>
+                            <td>{{ m.apellido }}</td>
+                            <td>{{ m.email }}</td>
+                            <td>{{ m.telefono }}</td>
+                            <td>{{ m.tipo }}</td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="5" style="text-align:center;">No hay miembros que coincidan con el filtro.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <nav class="paginacion" aria-label="Paginación">
+                {% if paginacion.has_prev %}
+                    <a href="{{ url_for('listado', page=paginacion.prev_num, tipo=tipo, orden=orden) }}" class="btn-volver">←</a>
+                {% else %}
+                    <button type="button" disabled>←</button>
+                {% endif %}
+                <span>{{ paginacion.page }} de {{ paginacion.pages or 1 }}</span>
+                {% if paginacion.has_next %}
+                    <a href="{{ url_for('listado', page=paginacion.next_num, tipo=tipo, orden=orden) }}" class="btn-volver">→</a>
+                {% else %}
+                    <button type="button" disabled>→</button>
+                {% endif %}
+            </nav>
+        </main>
+    </body>
+</html>

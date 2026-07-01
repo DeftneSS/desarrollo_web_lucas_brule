@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Recreación UChile - Registrar Actividad</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+    <body>
+        <main class="container">
+            <header>
+                <h1>Registrar Actividad</h1>
+            </header>
+
+            {% if errores %}
+                <div id="val-box-actividades" class="validation-box" style="background:#f8d7da;border:1px solid #721c24;color:#721c24;padding:15px;margin-bottom:20px;border-radius:5px;">
+                    <h2 style="color:#721c24;font-size:1.1em;margin-bottom:10px;">Los siguientes campos son inválidos:</h2>
+                    <ul style="color:#721c24;list-style-position:inside;">
+                        {% for e in errores %}<li>{{ e }}</li>{% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <div id="val-box-actividades" class="validation-box" hidden>
+                <h2 id="val-msg-actividades" class="validation-message"></h2>
+                <ul id="val-list-actividades" class="validation-list"></ul>
+            </div>
+
+            <form id="ActividadesForm" name="ActividadesForm" class="formulario" action="{{ url_for('actividades') }}" method="post" enctype="multipart/form-data">
+                <h2>Información de la Actividad</h2>
+                {% if user %}
+                    <p><strong>Miembro:</strong> {{ user.nombre }} {{ user.apellido }} ({{ user.email }})</p>
+                {% endif %}
+                <div class="grupo-input">
+                    <label for="name">Nombre de la Actividad:</label>
+                    <input id="name" name="name" type="text" value="{{ form_data.get('name', '') }}">
+                </div>
+                <div class="grupo-input">
+                    <label for="description">Descripción:</label>
+                    <textarea id="description" name="description" rows="4" class="no-resize">{{ form_data.get('description', '') }}</textarea>
+                </div>
+                <div class="grupo-input">
+                    <label for="date">Fecha:</label>
+                    <input id="date" name="date" type="date" value="{{ form_data.get('date', '') }}">
+                </div>
+                <div class="grupo-input">
+                    <label for="time-start">Hora de Inicio:</label>
+                    <input id="time-start" name="time-start" type="time" value="{{ form_data.get('time-start', '') }}">
+                </div>
+                <div class="grupo-input">
+                    <label for="time-end">Hora de Término:</label>
+                    <input id="time-end" name="time-end" type="time" value="{{ form_data.get('time-end', '') }}">
+                </div>
+                <div class="grupo-input">
+                    <label for="tipo">Tipo de Actividad:</label>
+                    <select id="tipo" name="tipo">
+                        <option value="">-- Seleccione un tipo --</option>
+                        <option value="Artistica" {% if form_data.get('tipo') == 'Artistica' %}selected{% endif %}>Artística</option>
+                        <option value="Deportiva" {% if form_data.get('tipo') == 'Deportiva' %}selected{% endif %}>Deportiva</option>
+                        <option value="Tecnologica" {% if form_data.get('tipo') == 'Tecnologica' %}selected{% endif %}>Tecnológica</option>
+                        <option value="Social" {% if form_data.get('tipo') == 'Social' %}selected{% endif %}>Social</option>
+                        <option value="General" {% if form_data.get('tipo') == 'General' %}selected{% endif %}>General</option>
+                    </select>
+                </div>
+                <div class="grupo-input">
+                    <label for="file">Subir Foto(s) o Video(s):</label>
+                    <input id="file" name="file" type="file" accept="image/*,video/*" multiple>
+                </div>
+                <div class="grupo-input">
+                    <label for="link">Link de la Actividad (opcional):</label>
+                    <input id="link" name="link" type="url" value="{{ form_data.get('link', '') }}">
+                </div>
+                <div class="botones">
+                    <button type="button" id="envio-actividades" onclick="validarFormActividades()">Enviar</button>
+                    <a href="{{ url_for('index') }}" class="btn-volver">Volver</a>
+                </div>
+            </form>
+        </main>
+        <script src="{{ url_for('static', filename='validador.js') }}"></script>
+    </body>
+</html>

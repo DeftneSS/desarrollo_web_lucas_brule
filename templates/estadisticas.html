@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Recreación UChile - Estadísticas</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+    <body>
+        <main class="container">
+            <header>
+                <h1>Estadísticas</h1>
+            </header>
+
+            <section class="stats-container">
+                <article class="chart-box">
+                    <div id="grafico-miembros-por-dia" class="grafico"></div>
+                </article>
+
+                <article class="chart-box">
+                    <div id="grafico-actividades-por-tipo" class="grafico"></div>
+                </article>
+
+                <article class="chart-box">
+                    <div id="grafico-actividades-por-comuna" class="grafico"></div>
+                </article>
+            </section>
+
+            <nav class="navegacion">
+                <a href="{{ url_for('index') }}" class="btn-registro">Volver al Inicio</a>
+            </nav>
+        </main>
+
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="{{ url_for('static', filename='estadisticas.js') }}"></script>
+    </body>
+</html>

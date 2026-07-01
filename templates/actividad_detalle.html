@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Recreación UChile - Actividad</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+    <body>
+        <main class="container" data-actividad-id="{{ actividad.id }}">
+            <header>
+                <h1>{{ actividad.nombre }}</h1>
+                <p><small>({{ actividad.tipo }})</small></p>
+            </header>
+
+            <nav class="navegacion">
+                <a href="{{ url_for('miembro_detalle', id=actividad.miembro.id) }}" class="btn-registro">Volver al Miembro</a>
+                <a href="{{ url_for('index') }}" class="btn-registro">Volver al Inicio</a>
+            </nav>
+
+            <section class="formulario">
+                <h2>Información</h2>
+                <p><strong>Miembro:</strong> {{ actividad.miembro.nombre }} {{ actividad.miembro.apellido }}</p>
+                <p><strong>Fecha:</strong> {{ actividad.fecha.strftime('%Y-%m-%d') }}</p>
+                <p><strong>Horario:</strong> {{ actividad.hora_inicio }} a {{ actividad.hora_fin }}</p>
+                {% if actividad.descripcion %}
+                    <p><strong>Descripción:</strong> {{ actividad.descripcion }}</p>
+                {% endif %}
+                {% if actividad.link %}
+                    <p><strong>Link:</strong> <a href="{{ actividad.link }}" target="_blank" rel="noopener">{{ actividad.link }}</a></p>
+                {% endif %}
+
+                {% if actividad.fotos %}
+                    <h3>Archivos</h3>
+                    <div class="galeria">
+                        {% for foto in actividad.fotos %}
+                            {% set ext = foto.nombre_archivo.split('.')[-1]|lower %}
+                            {% if ext in ['mp4', 'webm', 'mov', 'ogg'] %}
+                                <video src="{{ url_for('static', filename='uploads/' + foto.ruta_archivo.split('/')[-1]) }}" controls class="media-actividad"></video>
+                            {% else %}
+                                <img src="{{ url_for('static', filename='uploads/' + foto.ruta_archivo.split('/')[-1]) }}" alt="{{ foto.nombre_archivo }}" class="media-actividad">
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </section>
+
+            <section class="formulario seccion-comentarios">
+                <h2>Agregar comentario</h2>
+
+                {% if user %}
+                    <p>Comentando como <strong>{{ user.nombre }} {{ user.apellido }}</strong>.</p>
+                    <div id="val-box-comentario" class="validation-box" hidden></div>
+
+                    <form id="comentarioForm">
+                        <div class="grupo-input">
+                            <label for="com-texto">Comentario:</label>
+                            <textarea id="com-texto" name="texto" rows="4" cols="50" class="no-resize" maxlength="300"></textarea>
+                        </div>
+                        <div class="botones">
+                            <button type="button" id="btn-agregar-comentario" onclick="agregarComentario()">Agregar comentario</button>
+                        </div>
+                    </form>
+                {% else %}
+                    <p>Debes <a href="{{ url_for('login') }}">iniciar sesión</a> para dejar un comentario.</p>
+                {% endif %}
+            </section>
+
+            <section class="seccion-comentarios">
+                <h2>Comentarios</h2>
+                <div id="lista-comentarios">
+                    <p id="comentarios-loading">Cargando comentarios...</p>
+                </div>
+            </section>
+        </main>
+
+        <script src="{{ url_for('static', filename='comentarios.js') }}"></script>
+    </body>
+</html>

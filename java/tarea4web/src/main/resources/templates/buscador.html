@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Recreación UChile - Buscador de Actividades</title>
+        <link rel="stylesheet" th:href="@{/styles.css}">
+    </head>
+    <body>
+        <main class="container">
+            <header>
+                <h1>Buscador de Actividades</h1>
+                <p style="text-align:right;">
+                    <span th:if="${miembro}">
+                        Sesión: <strong th:text="${miembro.nombre + ' ' + miembro.apellido}">Nombre</strong>
+                        · <a th:href="@{/logout}">Cerrar sesión</a>
+                    </span>
+                    <span th:unless="${miembro}">
+                        <a th:href="@{/login}">Iniciar sesión</a>
+                    </span>
+                </p>
+            </header>
+
+            <nav class="navegacion">
+                <a href="#" class="btn-registro">Volver al Inicio</a>
+                <a href="#" class="btn-registro">Listado de Miembros</a>
+                <a href="#" class="btn-registro">Estadísticas</a>
+            </nav>
+
+            <section class="formulario">
+                <div class="grupo-input">
+                    <label for="busqueda">Escribe al menos 3 caracteres para buscar:</label>
+                    <input id="busqueda" name="busqueda" type="text" autocomplete="off">
+                </div>
+            </section>
+
+            <section id="resultados-container">
+                <p id="mensaje-inicial">Escribe en el buscador para ver actividades.</p>
+                <div id="resultados"></div>
+            </section>
+
+            <section id="todas-actividades">
+                <h2>Actividades disponibles</h2>
+                <p class="hint">Esta tabla muestra las actividades existentes en la base de datos como referencia. Puedes evaluar directamente desde aquí si tienes sesión iniciada.</p>
+                <div id="tabla-todas"></div>
+            </section>
+        </main>
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            window.HAY_SESION = /*[[${miembro != null}]]*/ false;
+            /*]]>*/
+        </script>
+        <script th:src="@{/js/buscador.js}"></script>
+    </body>
+</html>
